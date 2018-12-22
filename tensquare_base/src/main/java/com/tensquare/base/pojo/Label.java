@@ -1,4 +1,4 @@
-package com.tensquare.base.com.tensquare.base.pojo;
+package com.tensquare.base.pojo;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;

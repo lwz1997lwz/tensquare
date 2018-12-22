@@ -1,4 +1,4 @@
-package entity;
+package com.tensqaure.common.entity;
 
 /**
  * @program: tensquare_parent

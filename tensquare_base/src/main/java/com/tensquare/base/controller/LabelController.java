@@ -1,10 +1,10 @@
-package com.tensquare.base.com.tensquare.base.controller;
+package com.tensquare.base.controller;
 
-import com.tensquare.base.com.tensquare.base.pojo.Label;
-import com.tensquare.base.com.tensquare.base.service.LabelService;
-import entity.PageResult;
-import entity.Result;
-import entity.StatusCode;
+import com.tensquare.base.pojo.Label;
+import com.tensquare.base.service.LabelService;
+import com.tensqaure.common.entity.PageResult;
+import com.tensqaure.common.entity.Result;
+import com.tensqaure.common.entity.StatusCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;

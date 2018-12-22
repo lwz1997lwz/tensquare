@@ -1,4 +1,4 @@
-package entity;
+package com.tensqaure.common.entity;
 
 import java.util.List;
 
