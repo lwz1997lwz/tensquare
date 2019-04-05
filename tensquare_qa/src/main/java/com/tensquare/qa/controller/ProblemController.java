@@ -2,7 +2,12 @@ package com.tensquare.qa.controller;
 
 import java.util.Map;
 
+import com.tensquare.qa.client.BaseClient;
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,11 +23,14 @@ import com.tensqaure.common.entity.PageResult;
 import com.tensqaure.common.entity.Result;
 import com.tensqaure.common.entity.StatusCode;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * 控制器层
  *
  * @author Administrator
  */
+
 @RestController
 @CrossOrigin
 @RequestMapping("/problem")
@@ -31,7 +39,16 @@ public class ProblemController {
     @Autowired
     private ProblemService problemService;
 
+    @Autowired
+    private HttpServletRequest request;
 
+    private BaseClient baseClient;
+
+    @RequestMapping(value = "/label" , method = RequestMethod.GET)
+    public Result getAll() {
+        Result result = baseClient.getAll();
+        return result;
+    }
     @RequestMapping(value = "/newlist/{labelId}/{page}/{size}", method = RequestMethod.GET)
     public Result newList(@PathVariable String labelId, @PathVariable int page, @PathVariable int size) {
         Page<Problem> pageInfo = problemService.newList(labelId, page, size);
@@ -45,12 +62,14 @@ public class ProblemController {
         PageResult pageResult = new PageResult(pageInfo.getTotalElements(), pageInfo.getContent());
         return new Result(true, StatusCode.OK, "查询成功", pageResult);
     }
+
     @RequestMapping(value = "/waitList/{labelId}/{page}/{size}", method = RequestMethod.GET)
     public Result waitList(@PathVariable String labelId, @PathVariable int page, @PathVariable int size) {
         Page<Problem> pageInfo = problemService.waitList(labelId, page, size);
         PageResult pageResult = new PageResult(pageInfo.getTotalElements(), pageInfo.getContent());
         return new Result(true, StatusCode.OK, "查询成功", pageResult);
     }
+
     /**
      * 查询全部数据
      *
@@ -105,6 +124,10 @@ public class ProblemController {
      */
     @RequestMapping(method = RequestMethod.POST)
     public Result add(@RequestBody Problem problem) {
+        String role = (String) request.getAttribute("user_claims");
+        if (role == null || !"user".equals(role)) {
+            return new Result(false, StatusCode.ERROR, "没有权限");
+        }
         problemService.add(problem);
         return new Result(true, StatusCode.OK, "增加成功");
     }
